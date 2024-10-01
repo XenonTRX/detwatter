@@ -1,15 +1,12 @@
 {
-    "manifest_version": 3,
+    "manifest_version": 2,
     "name": "DeTwatter",
     "version": "1.0",
     "description": "Adds an 💩 to links pointing to twitter.com and other aliases.",
-    "permissions": [
-        "activeTab"
-    ],
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["contentScript.js"]
+            "js": ["detwatter.js"]
         }
     ],
     "icons": {
