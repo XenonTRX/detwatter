@@ -20,16 +20,35 @@ function addEmojiToUnsafeLinks() {
     links.forEach(link => {
         const href = link.getAttribute('href');
 
-        // Check if the href attribute contains any of the target sites
-        if (href && isUnsafeLink(href)) {
-            // Add the emoji in front of the link text
+        // Check if the href attribute contains any of the target sites (and is not already marked)
+        if (href && isUnsafeLink(href) && !link.dataset.emojiAdded) {
+            // If the link is a twitter status
             link.innerHTML = `🤮 ${link.innerHTML} 🤮`;
+            link.dataset.emojiAdded = true; // Prevents adding emojis multiple times
         }
     });
 }
 
+function observeDOMChanges() {
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach(() => {
+            addEmojiToUnsafeLinks();
+        });
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+}
+
+// Initial run
 if (document.readyState !== 'loading') {
     addEmojiToUnsafeLinks();
+    observeDOMChanges();
 } else {
-    document.addEventListener('DOMContentLoaded', addEmojiToUnsafeLinks);
+    document.addEventListener('DOMContentLoaded', () => {
+        addEmojiToUnsafeLinks();
+        observeDOMChanges();
+    });
 }
